@@ -1,4 +1,4 @@
-<img src="https://github.com/BeanstalkFarms/Multi-Flow-Pump-Whitepaper/blob/main/logos/black-fergie.svg" alt="Multi Flow Pump logo" align="right" width="120" />
+<img src="https://github.com/BeanstalkFarms/Beanstalk-Brand-Assets/blob/main/multi-flow/256x256-MF.png" alt="Multi Flow Pump logo" align="right" width="120" />
 
 # Multi Flow Pump Whitepaper
 
