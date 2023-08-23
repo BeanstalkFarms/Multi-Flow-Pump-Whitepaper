@@ -164,28 +164,31 @@ urlcolor=black,
 \thispagestyle{empty} % Hide page numbering
 \begin{titlepage}
 \begin{center}
-\vspace*{-0.1cm}
-\begin{changemargin}{-1.5cm}{-1.5cm}
+\begin{changemargin}{-2.5cm}{-2.5cm}
 \centering % added to center title
-\textbf{\Large{Multi Flow: Multi-block MEV Resistant Pump For Current Values}}
+\textbf{\large{Multi Flow: Inter-block MEV Manipulation Resistant Pump For Current Values}}
 \end{changemargin}
 \begin{center}
+\vspace{0.4cm}
 \PumpCover
 \end{center}
 \vspace{0.4cm}
-\large{Publius}
 
-\vspace{-0.25cm}
-\normalsize{beanstalk.publius@protonmail.com}
+\begin{center}
+    \begin{tabular}{>{\centering\arraybackslash}p{5cm} >{\centering\arraybackslash}p{5cm}}
+        \large{Brendan Sanderson} & \large{Ben Weintraub} \\
+        \href{mailto:brendan@manifestcrypto.org}{\normalsize{brendan@manifestcrypto.org}} & \href{mailto:ben@manifestcrypto.org}{\normalsize{ben@manifestcrypto.org}}
+    \end{tabular}
+\end{center}
 
 \vspace{-0.25cm}
 \normalsize{\href{https://basin.exchange/}{basin.exchange}}
 
 \vspace{0.4cm}
-\footnotesize{Published:} \normalsize{July UPDATE, 2023}
+\footnotesize{Published:} \normalsize{August 23, 2023}
 
 \vspace{-0.25cm}
-\footnotesize{Modified:} \normalsize{July UPDATE, 2023}
+\footnotesize{Modified:} \normalsize{August 23, 2023}
 
 \vspace{-0.25cm}
 \footnotesize{Whitepaper Version:} {\normalsize{1.0.0}}
@@ -200,7 +203,7 @@ urlcolor=black,
 \normalsize{\hspace{2.5em}- Homer, The Odyssey}\fref{poetryintranslation.com/PITBR/Greek/Odyssey12.php}
 \vspace{0.4cm}
 \begin{abstract}
-\justified{\normalsize{\noindent Oracles are a core piece of the decentralized financial tech stack. Non-network-native oracles that require additional trust assumptions beyond the integrity of the network are the only current option for EVM-native protocols in a post-Merge\fref{ethereum.org/en/roadmap/merge} environment because current network-native oracles are not resistant to multi-block maximum extractable value (MEV) manipulation. We propose a multi-block MEV resistant network-native oracle for arbitrary current data in an EVM for both instantaneous and time-weighted values.}}
+\justified{\normalsize{\noindent Oracles are a core piece of the decentralized finance tech stack. Non-network-native oracles that require additional trust assumptions beyond the integrity of the network are the only current option for EVM-native protocols in a post-Merge\fref{ethereum.org/en/roadmap/merge} environment because current network-native oracles are not resistant to inter-block maximum extractable value (MEV) manipulation. We propose an inter-block MEV manipulation resistant network-native oracle for arbitrary current data in an EVM for both instantaneous and time-weighted average (TWA) values.}}
 \end{abstract}
 \end{center}
 \end{titlepage}
@@ -225,122 +228,126 @@ urlcolor=black,
 \setcounter{page}{3} % Begin page numbering
 
 \section{Introduction}
-Oracles are the basis for any complex network-native financial activity: network-native contracts often require oracles to report data external to it to process transactions. Oracle data can be bifurcated into data that is native to the network of the contracts using the oracle data and data that is not native to the network. Whereas data that is not native to the network must be reported to the network through some external oracle system that requires additional trust assumptions beyond the integrity of the network itself, data that is native to the network can be reported through a network-native oracle that does not. However, there are no current Ethereum-native oracles for Ethereum-native data that offer manipulation resistance in a post-Merge environment. 
+Oracles are a principle component of complex network-native financial activity: network-native contracts often require oracles to report external data to process transactions. Oracle data can be bifurcated into data that is native to the network of the contracts using the oracle data and data that is not native to the network. Whereas data that is not native to the network must be reported to the network through some external oracle system that requires additional trust assumptions beyond the integrity of the network itself, data that is native to the network can be reported through a network-native oracle that does not. However, there are no current Ethereum-native oracles for Ethereum-native data that offer manipulation resistance in a post-Merge environment. 
 
-Prior to the Merge the potential for “risk-free” manipulation resistance was limited to intra-block (\textit{i.e.}, within a single block) manipulation. However, the Merge created the potential for “risk-free” inter-block (\textit{i.e.}, across multiple blocks) manipulation because block proposers are known at the beginning of each epoch. When the same proposer (or a coordinated set of proposers) know they get to propose multiple consecutive blocks, they can execute arbitrary activity acceptable to the network (\textit{e.g.}, buy as much of an asset as possible) without risk of having any transactions processed that cost them anything (\textit{e.g.}, selling the asset at its now elevated price) until the first block they are not the proposer of. All oracles for network-native data that were implemented prior to the Merge lack inter-block manipulation resistance. The occurence of consecutive blocks being proposed by the same proposer is high enough\fref{alrevuelta.github.io/posts/ethereum-mev-multiblock} such that current network-native oracles are unusable for any protocol that requires manipulation resistant oracles. 
+Prior to the Merge the potential for “risk-free” manipulation resistance was limited to intra-block (\textit{i.e.}, within a single block) manipulation. However, the Merge created the potential for “risk-free” inter-block (\textit{i.e.}, across multiple blocks) manipulation because block proposers are known at the beginning of each epoch. When the same proposer (or a coordinated set of proposers) knows they get to propose multiple consecutive blocks, they can execute arbitrary activity acceptable to the network (\textit{e.g.}, buy as much of an asset as possible) without risk of having any transactions processed that cost them anything (\textit{e.g.}, selling the asset at its now elevated price) until the first block proposed by others. In practice, there is no way to prevent inter-block manipulation from inter-block MEV. Therefore, network-native oracles must be resistant to inter-block manipulation as much as possible. However, all oracles for network-native data that were implemented prior to the Merge lack inter-block manipulation resistance. The occurrence of consecutive blocks being proposed by the same proposer is high enough\fref{alrevuelta.github.io/posts/ethereum-mev-multiblock} such that current network-native oracles are unusable for any protocol that requires manipulation resistant oracles. 
 
-%\vspace*{-3mm}
+\vspace*{-1mm}
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=.25]{Figure15}
-    \vspace*{-5mm}
-    \caption{Multi-Block MEV Occurences Per Year By Validator Ownership Percent}
+    \vspace*{-7mm}
+    \caption{Inter-Block MEV Occurrences Per Year By Validator Ownership Percent}
     \label{fig 2}
 \end{figure}
 %\vspace*{-5mm}
 
-Basin is a composable decentralized exchange (DEX) architecture native to the EVM(UPDATE CITE BASIN WP). Pumps are the generalized oracle component of Basin. The ability to compose together arbitrary exchange functions and oracles with Basin allows for the combination of existing exchange functions that remain popular for network-native exchanges with new network-native oracles that are multi-block MEV manipulation resistant.
+Basin is a composable decentralized exchange (DEX) architecture native to the EVM.\footnote{\href{https://basin.exchange/basin.pdf}{basin.exchange/basin.pdf}} Pumps are the generalized oracle component of Basin. The ability to compose together arbitrary exchange functions and oracles with Basin allows for the combination of existing exchange functions that remain popular for network-native exchanges with new network-native oracles that are inter-block MEV manipulation resistant.
 
-Oracle data can be further classified as current or historical data, and instantaneous or time-weighted. Whereas there is inherently no network-native oracle for non-network-native data, there are potential network-native oracles for current and historical data of instantaneous and time-weighted values. Multi Flow supports current instantaneous and time-weighted values to allow for any network-native protocol to access manipulation resistant current data stored in a Multi Flow from a network-native oracle.
+Oracle data can be further classified as current or historical data, and instantaneous or TWA. Whereas there is inherently no network-native oracle for non-network-native data, there are potential network-native oracles for current and historical data of instantaneous and TWA values. Multi Flow supports current instantaneous and TWA values to allow for any network-native protocol to access manipulation resistant current data without additional trust assumptions beyond the integrity of the network and the Multi Flow implementation. 
 
 \section{Previous Work}
 Multi Flow is the next step in the evolution of EVM-native oracles for current values.
 
-A robust, trustless computer network that supports composability and fungible token standards (\textit{i.e.}, Ethereum) is necessary to host a DEX. A DEX that supports the composition of other components of an exchange with arbitrary oracles (\textit{i.e.}, Basin) and an interface for arbitrary oracles (\textit{i.e.}, \term{Pumps}) is necessary to support Multi Flow. 
+A robust, trustless computer network that supports composability and fungible token standards (\textit{e.g.}, Ethereum) is necessary to host a DEX. A DEX that supports (1) the composition of other components of an exchange with arbitrary oracles (\textit{i.e.}, Basin) and (2) an interface for arbitrary oracles (\textit{i.e.}, \term{Pumps}) is necessary to support Multi Flow. 
 
-Uniswap V2\fref{uniswap.org/whitepaper.pdf} implemented a time-weighted average (TWA) network-native oracle for assets being traded in a Uniswap V2 liquidity pool by saving a cumulative sum of the time-weighted prices of the pool at the end of the last block a trade occurred in. Using the end of block price prevented intra-block manipilation but does not provide any inter-block manipulation resistance. Uniswap V2 does not store historical cumulative values of the oracle, such that other protocols wishing to use the oracle must store historical values as necessary. The Uniswap V2 oracle lacks support for an inter or intra-block manipulation resistant current price. 
+Uniswap V2\fref{uniswap.org/whitepaper.pdf} implemented a TWA network-native oracle for assets being traded in a Uniswap V2 liquidity pool by saving a cumulative sum of the price of the pool at the end of each block. Using the end of block price prevents intra-block manipulation but does not provide any inter-block manipulation resistance. The Uniswap V2 oracle lacks support for an inter or intra-block manipulation resistant instantaneous price. 
 
-Curve\fref{etherscan.io/token/0xc9c32cd16bf7efb85ff14e0c8603cc90f6f2ee49} impelemented an intra-block manipulation resistant current price oracle using the price at the end of the last block. The Curve oracle lacks support for an inter-block manipulation resistant current price. 
+Uniswap V3\fref{uniswap.org/whitepaper-v3.pdf} innovated further on manipulation resistant network-native oracles for TWA values by moving from a simple moving average (SMA) of an arithmetic mean,\fref{uniswap.org/whitepaper.pdf} which weights outliers equally to all other data points, to an SMA of a geometric mean, which weights certain outliers significantly less. In addition to price, the oracle also stores data related to the liquidity in the pool, such that a time and liquidity-weighted average price can be measured. However, the Uniswap V3 oracle also lacks inter-block manipulation resistance for TWA values and supports neither an inter nor intra-block manipulation resistant instantaneous price.
 
-Uniswap V3\fref{uniswap.org/whitepaper-v3.pdf} innovated further on manipulation resistant network-native oracles for time-weighted values by moving from a simple moving average (SMA) of an arithmetic mean,\fref{uniswap.org/whitepaper.pdf} which weights outliers equally to all other data points, to an SMA of a geometric mean, which weights certain outliers significantly less. In addition to price, the oracle also stores data related to the liquidity in the pool, such that time and liquidity-weighted prices can be computed. The V3 oracle stores historical oracle values making it unnecessary for other protocols to do so. 
+Curve\fref{etherscan.io/token/0xc9c32cd16bf7efb85ff14e0c8603cc90f6f2ee49} implemented an intra-block manipulation resistant instantaneous price oracle using the price at the end of the last block. The Curve oracle lacks support for an inter-block manipulation resistant instantaneous price. 
 
 \section{Multi Flow}
-Multi Flow takes a two-step approach to creating a network-native multi-block MEV manipulation resistant oracle from manipulable data. First, Multi Flow “cleans” the data by calculating multi-block MEV manipulation resistant last values. Then, using the manipulation resistant last values, Multi Flow calculates current instantaneous and time-weighted multi-block MEV manipulation resistant values. 
+Multi Flow uses a two-step approach to create a network-native inter-block MEV manipulation resistant oracle from manipulable data. First, Multi Flow “cleans” the data by calculating inter-block MEV manipulation resistant last values. Then, using the manipulation resistant last values, Multi Flow calculates current instantaneous and TWA inter-block MEV manipulation resistant values. 
 
-In practice Multi Flow stores 3 different types of values at the last updated timestamp ($l$), such that $l, x \in \mathbb{Z}^{+}$:
+In practice, Multi Flow stores 3 different types of values ($x$) at the last updated timestamp ($l$), such that $l, x \in \mathbb{Z}^{+}$:
 \begin{itemize}
-\item Multi-block MEV resistant last values: $[x^{MEV}_{0,l}, \cdots, x^{MEV}_{n,l}]$,
-\item Multi-block MEV resistant Geometric EMA values: $[x^{EMA}_{0,l}, \cdots, x^{EMA}_{n,l}]$, and
-\item Multi-block MEV-resistant Cumulative Geometric SMA values: $[x^{SMA}_{0,l}, \cdots, x^{SMA}_{n,l}]$.
+\item Inter-block MEV manipulation resistant last values $[x^{\text{LAST}}_{0,l}, \cdots, x^{\text{LAST}}_{n,l}]$;
+\item Inter-block MEV manipulation resistant Geometric EMA values $[x^{\text{EMA}}_{0,l}, \cdots, x^{\text{EMA}}_{n,l}]$; and
+\item Inter-block MEV manipulation resistant Cumulative Geometric SMA values $[x^{\text{SMA}}_{0,l}, \cdots, x^{\text{SMA}}_{n,l}]$.
 \end{itemize}
 
-All values are stored in $log_2$ form. To properly read each value from Multi Flow, they must be converted to their normal form. Therefore, Multi Flow supports 3 different types of values at timestamp $t$, such that $l \leq t$, $t, y \in \mathbb{Z}^{+}$:
+The second log of each value is stored. To properly read each value from Multi Flow, it must be converted back to its original value ($y$), such that $y \in \mathbb{Z}^{+}$. In the case of the TWA inter-block MEV manipulation resistant value, two values of x (\textit{i.e.}, from the beginning and end of the period over which the TWA is being measured ($t_0$ and $t_1$, respectively) such that $t_0,\ t_1 \in \mathbb{Z}^{+}$) must be used. Therefore, Multi Flow supports 3 different types of values:
 \begin{itemize}
-\item Multi-block MEV resistant last values: $[y^{MEV}_{0,l}, \cdots, y^{MEV}_{n,l}]$,
-\item Multi-block MEV resistant Geometric EMA values: $[y^{EMA}_{0,l}, \cdots, y^{EMA}_{n,l}]$, and
-\item Multi-block MEV-resistant Cumulative Geometric SMA values: $[y^{SMA}_{0,t_0,t_1}, \cdots, y^{SMA}_{n,t_0,t_1}]$.
+\item Inter-block MEV manipulation resistant last values $[y^{\text{LAST}}_{0,l}, \cdots, y^{\text{LAST}}_{n,l}]$;
+\item Inter-block MEV manipulation resistant Geometric EMA values $[y^{\text{EMA}}_{0,l}, \cdots, y^{\text{EMA}}_{n,l}]$; and
+\item Inter-block MEV manipulation resistant TWA Geometric SMA values $[y^{\text{SMA}}_{0,t_0,t_1}, \cdots, y^{\text{SMA}}_{n,t_0,t_1}]$.
 \end{itemize}
 
-In addition to reading the values stored at timestamp $l$, Multi Flow also supports reading the current values at timestamp $t$.
+Multi Flow supports reading values at both $l$ and the current timestamp $t$, such that $l \leq t$, $t \in \mathbb{Z}^{+}$.
 
-\subsection{Multi-Block MEV Manipulation Resistant Last Values}
-In a post-Merge multi-block MEV susceptible environment there is no way for network-native oracles to know whether the data at the beginning or end of a particular transaction or block is being manipulated or not. In practice this means that oracles must assume the potential for manipulation of every value. Therefore, the fundamental question for manipulation resistant oracles in a multi-block MEV enviroment is around the treatment of statistical outliers which are certain to exist with no way for the oracle to know if it is the result of honest network activity or manipulation. 
+\subsection{Inter-Block MEV Manipulation Resistant Last Values}
+In a post-Merge inter-block MEV susceptible environment there is no way for network-native oracles to know whether the data at the beginning or end of a particular transaction or block is being manipulated or not. In practice this means that oracles must assume the potential for manipulation of every value. Therefore, the fundamental question for manipulation resistant oracles in an inter-block MEV environment is around the treatment of statistical outliers which are certain to exist with no way for the oracle to know if it is the result of honest network activity or manipulation. 
 
-The multi-block MEV manipulation resistant last values are calculated using a cap on the maximum percent change of the values acceptable per block. The cap limits the extent of manipulation over a given period of time and in doing so “cleans” the data for postprocessing into current instantaneous and time-weighted oracle values. 
+Multi Flow calculates the inter-block MEV manipulation resistant last values by using a cap on the maximum percent change of the values acceptable per block. The cap limits the extent of manipulation over a given number of blocks and in doing so “cleans” the data for postprocessing into current instantaneous and TWA oracle values. 
 
-For a given maximum increase permitted of a value per block ($\gamma_+$), maximum decrease permitted of a value per block ($\gamma_-$), block time of the given EVM in seconds ($\beta$), such that $\gamma_+,\ \gamma_-,\ \beta, \in \mathbb{Z}^{+}$, and the current values ($[x_{0,t}, \cdots, x_{n,t}]$), Multi Flow updates $[x^{MEV}_{0,l}, \cdots, x^{MEV}_{n,l}]$ at timestamp $t$ as:
+For a given maximum increase permitted of a value per block ($\gamma_+$), maximum decrease permitted of a value per block ($\gamma_-$), block time of the given EVM in seconds ($\beta$), such that $\gamma_+,\ \gamma_-,\ \beta, \in \mathbb{Z}^{+}$, and the current values ($[x_{0,t}, \cdots, x_{n,t}]$), Multi Flow updates $[x^{\text{LAST}}_{0,l}, \cdots, x^{\text{LAST}}_{n,l}]$ at timestamp $t$ as:
 $$
-x^{MEV}_{i,t} = 
+x^{\text{LAST}}_{i,t} = 
 \begin{cases}
-min\left(x_{i,t}, x^{MEV}_{i,l}(1+\gamma_+)^\frac{t-l}{\beta}\right) & x_{i,t} > x^{MEV}_{i,l} \\
-max\left(x_{i,t}, x^{MEV}_{i,l}(1-\gamma_-)^\frac{t-l}{\beta}\right) & \text{otherwise} \\
+\text{min}\left(x_{i,t}, x^{\text{LAST}}_{i,l}(1+\gamma_+)^\frac{t-l}{\beta}\right) & x_{i,t} > x^{\text{LAST}}_{i,l} \\
+\text{max}\left(x_{i,t}, x^{\text{LAST}}_{i,l}(1-\gamma_-)^\frac{t-l}{\beta}\right) & \text{otherwise} \\
 \end{cases}
 $$
 
-Because exponentiation is expensive in the EVM, in practice $[x^{MEV}_{0,l}, \cdots, x^{MEV}_{n,l}]$ is updated at $t$ as:
+Because exponentiation is expensive in the EVM, in practice $[x^{\text{LAST}}_{0,l}, \cdots, x^{\text{LAST}}_{n,l}]$ is updated at $t$ as:
 $$
-x^{MEV}_{i,t} = 
+x^{\text{LAST}}_{i,t} = 
 \begin{cases}
-min\left(log_2(x_{i,t}), x^{MEV}_{i,l} + log_2(1+\gamma_+) \frac{t-l}{\beta}\right) & log_2(x_{i,t}) > x^{MEV}_{i,l} \\
-max\left(log_2(x_{i,t}), x^{MEV}_{i,l} + log_2(1-\gamma_-) \frac{t-l}{\beta}\right) & \text{otherwise} \\
+\text{min}\left(log_2(x_{i,t}), x^{\text{LAST}}_{i,l} + log_2(1+\gamma_+) \frac{t-l}{\beta}\right) & log_2(x_{i,t}) > x^{\text{LAST}}_{i,l} \\
+\text{max}\left(log_2(x_{i,t}), x^{\text{LAST}}_{i,l} + log_2(1-\gamma_-) \frac{t-l}{\beta}\right) & \text{otherwise} \\
 \end{cases}
 $$
 
-Therefore, the mutli-block MEV manipulation resistant last values can be read as: 
+Therefore, the multi-block MEV manipulation resistant last values can be read as: 
 $$
-y^{MEV}_{i,l} = 2^{x^{MEV}_{i,l}}
-$$
-
-\subsection{Multi-Block MEV Manipulation Resistant Instantaneous Values}
-Multi Flow uses an exponential moving average (EMA) of the multi-block MEV resistant last values to calculate multi-block MEV manipulation resistant current instantaneous values. EMAs are useful for aggregating a time-series of data into a single value and are preferable to SMAs for instantaneous value because (1) they weight recent data more than older data and (2) instances where the direction in the deviations of the new last value and EMA value from the old ones are different are much more limited in frequency and scale (\textit{i.e.}, their changes are directionally the same more often). An EMA of the multi-block MEV resistant last values is preferable to the multi-block MEV resistant last values for reading an instantaneous value because it requires manipulation over extended periods of time to significantly manipulate the value.
-
-For a given exponential decay parameter ($\alpha$), such that $\alpha \in (0,1)$, $[x^{EMA}_{0,l}, \cdots, x^{EMA}_{n,l}]$ and $[x^{MEV}_{0,t}, \cdots, x^{MEV}_{n,t}]$, Multi Flow updates $[x^{EMA}_{0,t}, \cdots, x^{EMA}_{n,t}]$ at timestamp $t$ as:
-$$
-x^{EMA}_{i,t} = \alpha^{t-l} x^{EMA}_{i,l} + (1 - \alpha^{t-l}) x^{MEV}_{i,t}
+y^{\text{LAST}}_{i,l} = 2^{x^{\text{LAST}}_{i,l}}
 $$
 
-Therefore, the multi-block MEV manipulation resistant current instantaneous values can be read as: 
+\subsection{Inter-Block MEV Manipulation Resistant Instantaneous Values}
+Multi Flow uses an exponential moving average (EMA) of the inter-block MEV manipulation resistant last values to calculate inter-block MEV manipulation resistant current instantaneous values. EMAs are useful for aggregating a time-series of data into a single value and are preferable to SMAs for instantaneous value because (1) they weight recent data more than older data and (2) instances where the direction in the deviations of the new last value and EMA value from the old ones are different are much more limited in frequency and scale (\textit{i.e.}, their changes are directionally the same more often). An EMA of the inter-block MEV manipulation resistant last values is preferable to the inter-block MEV manipulation resistant last values for reading an instantaneous value because it requires manipulation over extended periods of time to significantly manipulate the value.
+
+For a given exponential decay parameter ($\alpha$), such that $\alpha \in (0,1)$, $[x^{\text{EMA}}_{0,l}, \cdots, x^{\text{EMA}}_{n,l}]$ and $[x^{\text{LAST}}_{0,t}, \cdots, x^{\text{LAST}}_{n,t}]$, Multi Flow updates $[x^{\text{EMA}}_{0,t}, \cdots, x^{\text{EMA}}_{n,t}]$ at timestamp $t$ as:
 $$
-y^{EMA}_{i,l} = 2^{x^{EMA}_{i,l}}
+x^{\text{EMA}}_{i,t} = \alpha^{t-l} x^{\text{EMA}}_{i,l} + (1 - \alpha^{t-l}) x^{\text{LAST}}_{i,t}
 $$
 
-\subsection{Multi-Block MEV-Resistant Time-Weighted Average Values}
-Multi Flow uses a cumulative sum of the multi-block MEV resistant last values to calculate multi-block MEV resistant SMA values. SMAs are useful for aggregating a time-series of data into a single value and are preferable to EMAs for time-weighted average value because they weight recent data the same as older data.
-
-For a given $[x^{SMA}_{0,l}, \cdots, x^{SMA}_{n,l}]$ and $[x^{MEV}_{0,t}, \cdots, x^{MEV}_{n,t}]$, Multi Flow updates $[x^{SMA}_{0,t}, \cdots, x^{SMA}_{n,t}]$ at timestamp $t$ as:
+Therefore, the inter-block MEV manipulation resistant current instantaneous values can be read as: 
 $$
-x^{SMA}_{i,t} = x^{SMA}_{i,l} + (t-l) x^{MEV}_{i,t}
+y^{\text{EMA}}_{i,l} = 2^{x^{\text{EMA}}_{i,l}}
 $$
 
-Therefore, the multi-block MEV manipulation resistant TWA values can be calculated from $x^{SMA}_{i,t_0}$ and $x^{SMA}_{i,t_1}$ as:
+\subsection{Inter-Block MEV manipulation resistant TWA Values}
+Multi Flow uses a cumulative sum of the inter-block MEV manipulation resistant last values to calculate inter-block MEV manipulation resistant SMA values. SMAs are useful for aggregating a time-series of data into a single value and are preferable to EMAs for TWA value because they weight recent data the same as older data.
+
+For a given $[x^{\text{SMA}}_{0,l}, \cdots, x^{\text{SMA}}_{n,l}]$ and $[x^{\text{LAST}}_{0,t}, \cdots, x^{\text{LAST}}_{n,t}]$, Multi Flow updates $[x^{\text{SMA}}_{0,t}, \cdots, x^{\text{SMA}}_{n,t}]$ at timestamp $t$ as:
 $$
-y^{SMA}_{i,t_0,t_1} = 2^{\frac{x^{SMA}_{i,t_1} - x^{SMA}_{i,l}}{t_1-t_0}}
+x^{\text{SMA}}_{i,t} = x^{\text{SMA}}_{i,l} + (t-l) x^{\text{LAST}}_{i,t}
 $$
 
-Because only the latest values of $[x^{SMA}_{0,t}, \cdots, x^{SMA}_{n,t}]$ are stored by Multi Flow, protocols must snapshot values at the beginning of the period over which the time-weighted average is being measured.
+Therefore, the inter-block MEV manipulation resistant TWA values can be calculated from $x^{\text{SMA}}_{i,t_0}$ and $x^{\text{SMA}}_{i,t_1}$ as:
+$$
+y^{\text{SMA}}_{i,t_0,t_1} = 2^{\frac{x^{\text{SMA}}_{i,t_1} - x^{\text{SMA}}_{i,l}}{t_1-t_0}}
+$$
+
+Because only the latest values of $[x^{\text{SMA}}_{0,l}, \cdots, x^{\text{SMA}}_{n,l}]$ are stored by Multi Flow, protocols must save values at the beginning of the period over which the TWA is being measured.
 
 \subsection{Governance}
-Multi Flow is non-upgradable. Therefore, there Multi Flow does not support governance.
+Multi Flow is non-upgradable. Therefore, Multi Flow does not support governance.
 
+\vspace{-1mm}
 \section{Risks}
-There are numerous risks associated with Multi Flow. This is not an exhaustive list.
+\vspace{-1mm}
+There are risks associated with Multi Flow. This is not an exhaustive list.
 
-The Multi Flow code base is novel. It has not been tested in the “real world” prior to its initial deployment. The open source nature of Multi Flow means that others can take advantage of any bugs, flaws or deficiencies in it. While Multi Flow has been audited(UPDATE AUDIT LINK) it is no guarantee of security. 
+The Multi Flow code base is novel. It has not been tested in the “real world” prior to its initial deployment. The open source nature of Multi Flow means that others can take advantage of any bugs, flaws or deficiencies in it. While Multi Flow has been audited\footnote{\href{https://basin.exchange/06-16-23-halborn-report}{basin.exchange/06-16-23-halborn-report}}$^{,}$\footnote{\href{https://basin.exchange/06-16-23-cyfrin-report}{basin.exchange/06-16-23-cyfrin-report}} it is no guarantee of security. 
 
-The Multi Flow does not prevent the manipulation of network-native values. Instead, it minimizes the effect of manipulation on oracle values(UPDATE). Therefore Multi Flow is manipulation resistant, not manipulation-preventing. 
+Multi Flow does not prevent manipulation of network-native values. Instead, it minimizes the effect of manipulation on oracle values. Therefore, Multi Flow is manipulation resistant, not manipulation-preventing. 
 
+\vspace{-1mm}
 \section{Future Work}
-Manipulation resistant network-native oracles are a work in progress. The following are potential improvements that can be incorporated into future iterations of manipulation resistant network-native oracles:
+\vspace{-1mm}
+Manipulation resistant network-native oracles are a work in progress. The following are some potential improvements that can be incorporated into future iterations of manipulation resistant network-native oracles:
 
 \begin{itemize}
 \item Support for historical values.
