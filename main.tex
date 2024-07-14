@@ -188,10 +188,10 @@ urlcolor=black,
 \footnotesize{Published:} \normalsize{August 23, 2023}
 
 \vspace{-0.25cm}
-\footnotesize{Modified:} \normalsize{August 23, 2023}
+\footnotesize{Modified:} \normalsize{July 14, 2024}
 
 \vspace{-0.25cm}
-\footnotesize{Whitepaper Version:} {\normalsize{1.0.0}}
+\footnotesize{Whitepaper Version:} {\normalsize{1.0.1}}
 
 \vspace{-0.25cm}
 \footnotesize{Code Version:} \href{https://github.com/BeanstalkFarms/Basin/blob/master/src/pumps/MultiFlowPump.sol}{\normalsize{1.0.0}}\footnote{\href{https://github.com/BeanstalkFarms/Basin/blob/master/src/pumps/MultiFlowPump.sol}{github.com/BeanstalkFarms/Basin/blob/master/src/pumps/MultiFlowPump.sol}}
@@ -230,7 +230,7 @@ urlcolor=black,
 \section{Introduction}
 Oracles are a principle component of complex network-native financial activity: network-native contracts often require oracles to report external data to process transactions. Oracle data can be bifurcated into data that is native to the network of the contracts using the oracle data and data that is not native to the network. Whereas data that is not native to the network must be reported to the network through some external oracle system that requires additional trust assumptions beyond the integrity of the network itself, data that is native to the network can be reported through a network-native oracle that does not. However, there are no current Ethereum-native oracles for Ethereum-native data that offer manipulation resistance in a post-Merge environment. 
 
-Prior to the Merge the potential for “risk-free” manipulation resistance was limited to intra-block (\textit{i.e.}, within a single block) manipulation. However, the Merge created the potential for “risk-free” inter-block (\textit{i.e.}, across multiple blocks) manipulation because block proposers are known at the beginning of each epoch. When the same proposer (or a coordinated set of proposers) knows they get to propose multiple consecutive blocks, they can execute arbitrary activity acceptable to the network (\textit{e.g.}, buy as much of an asset as possible) without risk of having any transactions processed that cost them anything (\textit{e.g.}, selling the asset at its now elevated price) until the first block proposed by others. In practice, there is no way to prevent inter-block manipulation from inter-block MEV. Therefore, network-native oracles must be resistant to inter-block manipulation as much as possible. However, all oracles for network-native data that were implemented prior to the Merge lack inter-block manipulation resistance. The occurrence of consecutive blocks being proposed by the same proposer is high enough\fref{alrevuelta.github.io/posts/ethereum-mev-multiblock} such that current network-native oracles are unusable for any protocol that requires manipulation resistant oracles. 
+Prior to the Merge the potential for “risk-free” manipulation resistance was limited to intra-block (\textit{i.e.}, within a single block) manipulation. However, the Merge created the potential for “risk-free” inter-block (\textit{i.e.}, across multiple blocks) manipulation because block proposers are known at the beginning of each epoch. When the same proposer (or a coordinated set of proposers) knows they get to propose multiple consecutive blocks, they can execute arbitrary activity acceptable to the network (\textit{e.g.}, buy as much of an asset as possible) without risk of having any transactions processed that cost them anything (\textit{e.g.}, selling the asset at its now elevated price) until the first block proposed by others. In practice, there is no way to prevent inter-block manipulation from inter-block MEV. Therefore, network-native oracles must be resistant to inter-block manipulation as much as possible. However, all oracles for network-native data that were implemented prior to the Merge lack inter-block manipulation resistance. The occurrence of consecutive blocks being proposed by the same proposer is high enough\fref{alvarorevuelta.com/posts/ethereum-mev-multiblock} such that current network-native oracles are unusable for any protocol that requires manipulation resistant oracles. 
 
 \vspace*{-1mm}
 \begin{figure}[h!]
@@ -354,6 +354,24 @@ Manipulation resistant network-native oracles are a work in progress. The follow
 \item Support for additional data (\textit{e.g.}, volatility).
 \item The ability to turn off when manipulation is detected.
 \item The ability to reset if it breaks.
+\end{itemize}
+
+\section{Whitepaper Version History}
+
+The following is a complete version history of this whitepaper. Unless otherwise noted, references within this Whitepaper Version History are not updated to reflect later changes.
+
+\begin{itemize}[topsep=0pt, itemsep=3pt,leftmargin=16pt]
+    \item \href{https://github.com/BeanstalkFarms/Multi-Flow-Pump-Whitepaper/blob/main/version-history/multi-flow-pump1_0_0.pdf}{1.0.0} (August 23, 2023)
+    
+    \begin{itemize}
+        \item Original whitepaper.
+    \end{itemize}
+    
+    \item \href{https://github.com/BeanstalkFarms/Multi-Flow-Pump-Whitepaper/blob/main/version-history/multi-flow-pump1_0_1.pdf}{1.0.1} (July 14, 2024)
+    
+    \begin{itemize}
+        \item Updated citation 4 with the new URL for the  \href{https://www.alvarorevuelta.com/posts/ethereum-mev-multiblock}{Multi-block MEV in Ethereum} article.
+    \end{itemize}
 \end{itemize}
 
 \end{document}
